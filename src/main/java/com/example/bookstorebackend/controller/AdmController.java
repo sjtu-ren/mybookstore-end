@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -43,5 +46,40 @@ public class AdmController {
     @RequestMapping("/admGetOrders")
     public JSONObject getOrders(@RequestBody JSONObject param){
         return orderService.admGetAll();
+    }
+
+    @RequestMapping("/admOrdByTime")
+    public JSONObject admGetOrdersByTime(@RequestBody JSONObject params){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start=new Date();
+        Date end=new Date();
+        try {
+            start=simpleDateFormat.parse(params.getString("start"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            end=simpleDateFormat.parse(params.getString("end"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return orderService.admGetAll(start,end);
+    }
+    @RequestMapping("/admCBook")
+    public JSONObject admComBook(@RequestBody JSONObject params){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start=new Date();
+        Date end=new Date();
+        try {
+            start=simpleDateFormat.parse(params.getString("start"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            end=simpleDateFormat.parse(params.getString("end"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return orderService.comBooks(start,end);
     }
 }
