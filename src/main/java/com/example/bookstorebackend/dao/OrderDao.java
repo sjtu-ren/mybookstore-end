@@ -32,4 +32,8 @@ public interface OrderDao {
      * comBooks - 管理员根据时间统计书籍销量
      * */
     JSONObject comBooks(Date start,Date end);
+    /*
+     * comBooks - 管理员根据用户名与时间统计书籍销量
+     * */
+    JSONObject comBooks(String username,Date start,Date end);
 }

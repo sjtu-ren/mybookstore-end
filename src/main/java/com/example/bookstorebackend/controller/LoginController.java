@@ -5,19 +5,25 @@ import com.example.bookstorebackend.entity.User;
 import com.example.bookstorebackend.service.UserService;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 
 
 @RestController
+@Scope("session")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class LoginController {
     @Autowired
-    private UserService userService;
+    WebApplicationContext webApplicationContext;
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public JSONObject login(@RequestBody JSONObject params){
         String username=params.getString("username");
         String password=params.getString("password");
+        UserService userService=webApplicationContext.getBean(UserService.class);
+        System.out.println(userService);
+        System.out.println(this);
         boolean remember= Boolean.parseBoolean(params.getString("checked"));
         User user=userService.checkUser(username,password);
         JSONObject obj=new JSONObject();

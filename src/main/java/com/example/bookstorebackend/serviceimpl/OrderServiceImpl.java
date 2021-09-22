@@ -5,12 +5,13 @@ import com.example.bookstorebackend.entity.Order;
 import com.example.bookstorebackend.service.OrderService;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-
 @Service
+@Scope("singleton")
 public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderDao orderDao;
@@ -34,9 +35,12 @@ public class OrderServiceImpl implements OrderService {
     public JSONObject admGetAll(Date start, Date end){return orderDao.getAllOrders(start,end);}
 
     @Override
-    public  JSONObject comAll(Integer userId,Date start, Date end){return orderDao.comOrders(userId,start,end);}
+    public JSONObject comAll(Integer userId,Date start, Date end){return orderDao.comOrders(userId,start,end);}
     @Override
-    public  JSONObject comBooks(Date start,Date end){return orderDao.comBooks(start,end);}
+    public JSONObject comBooks(Date start,Date end){return orderDao.comBooks(start,end);}
+
+    @Override
+    public JSONObject comBooks(String username,Date start,Date end){return orderDao.comBooks(username, start, end);}
 
 
 }

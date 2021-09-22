@@ -4,11 +4,13 @@ import com.example.bookstorebackend.dao.UserDao;
 import com.example.bookstorebackend.entity.User;
 import com.example.bookstorebackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Scope("prototype")
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;

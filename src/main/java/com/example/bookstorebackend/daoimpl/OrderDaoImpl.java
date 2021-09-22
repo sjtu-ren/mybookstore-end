@@ -52,6 +52,7 @@ public class OrderDaoImpl implements OrderDao {
         /*更新书库书本数量*/
         book.setNumber(book.getNumber()-itemNum);
         order.setUser(user);
+        bookRepository.save(book);
         Date time=new Date();
         order.setTime(time);
         orderRepository.save(order);
@@ -160,32 +161,21 @@ public class OrderDaoImpl implements OrderDao {
         });
         List<Book> books= new ArrayList<>();
         List<Integer> prices=new ArrayList<>();
-        orderItems.forEach(orderItem -> {
-            Book tmpBook=orderItem.getBook();
-            Integer tmpNum=orderItem.getItemNumber();
-            Integer price=tmpBook.getPrice();
-            if(books.contains(tmpBook)){
-                int index=books.indexOf(tmpBook);
-                Integer num1=nums.get(index);
-                nums.set(index,num1+tmpNum);
-                prices.set(index,price*(num1+tmpNum));
-            }
-            else{
-                books.add(tmpBook);
-                nums.add(tmpNum);
-                prices.add(price*tmpNum);
-            }
-        });
-        JSONObject obj=new JSONObject();
-        obj.put("books",books);
-        obj.put("num",nums);
-        obj.put("price",prices);
-        return obj;
+        return getFinalObj(orderItems, nums, books, prices);
     }
 
     @Override
     public JSONObject comBooks(Date start,Date end){
         List<Order> orders=orderRepository.findAll();
+        return getFilter(start, end, orders);
+    }
+    @Override
+    public JSONObject comBooks(String username,Date start,Date end){
+        List<Order> orders=orderRepository.getAllByUser_Username(username);
+        return getFilter(start, end, orders);
+    }
+
+    private JSONObject getFilter(Date start, Date end, List<Order> orders) {
         List<OrderItem> orderItems= new ArrayList<>();
         List<Integer> nums=new ArrayList<>();
         List<Book> books = new ArrayList<>();
@@ -195,6 +185,10 @@ public class OrderDaoImpl implements OrderDao {
                 orderItems.add(orderItemRepository.getOrderItemByMyOrder_OrderId(order.getOrderId()));
             }
         });
+        return getFinalObj(orderItems, nums, books, prices);
+    }
+
+    private JSONObject getFinalObj(List<OrderItem> orderItems, List<Integer> nums, List<Book> books, List<Integer> prices) {
         orderItems.forEach(orderItem -> {
             Book tmpBook=orderItem.getBook();
             Integer tmpNum=orderItem.getItemNumber();

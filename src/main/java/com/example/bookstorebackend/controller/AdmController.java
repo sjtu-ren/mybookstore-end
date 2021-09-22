@@ -82,4 +82,28 @@ public class AdmController {
         }
         return orderService.comBooks(start,end);
     }
+    @RequestMapping("/admByUser")
+    public JSONObject admByUser(@RequestBody JSONObject params){
+        String username=params.getString("username");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date start=new Date();
+        Date end=new Date();
+        try {
+            start=simpleDateFormat.parse(params.getString("start"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            String x="2000-01-01 00:00:00";
+            try {
+                start=simpleDateFormat.parse(x);
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+        try {
+            end=simpleDateFormat.parse(params.getString("end"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return orderService.comBooks(username,start,end);
+    }
 }

@@ -17,4 +17,5 @@ public interface OrderService {
     JSONObject comAll(Integer userId,Date start, Date end);
 
     JSONObject comBooks(Date start,Date end);
+    JSONObject comBooks(String username,Date start,Date end);
 }
