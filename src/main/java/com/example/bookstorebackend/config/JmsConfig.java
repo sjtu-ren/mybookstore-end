@@ -1,4 +1,4 @@
-package com.example.bookstorebackend.interceptor;
+package com.example.bookstorebackend.config;
 
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;

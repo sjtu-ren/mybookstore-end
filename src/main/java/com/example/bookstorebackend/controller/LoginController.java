@@ -14,8 +14,11 @@ import org.springframework.web.context.WebApplicationContext;
 @Scope("session")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class LoginController {
+
+
     @Autowired
     WebApplicationContext webApplicationContext;
+
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public JSONObject login(@RequestBody JSONObject params){

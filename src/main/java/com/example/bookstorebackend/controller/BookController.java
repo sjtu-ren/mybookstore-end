@@ -16,9 +16,13 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookService bookService;
-
+    private static int counter=0;
     @RequestMapping("/getBooks")
     public List<Book> getBooks(@RequestBody JSONObject params){
+        synchronized (this){
+            counter++;
+            System.out.format("访问次数：%d",counter);
+        }
         return bookService.getBooks();
     }
 

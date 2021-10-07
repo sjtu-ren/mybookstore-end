@@ -13,15 +13,10 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private BookDao bookDao;
-
     @Override
-    public List<Book> getBooks(){
-        return bookDao.getBooks();
-    }
+    public List<Book> getBooks(){return bookDao.getBooks();}
     @Override
-    public Book getBook(Integer id){
-        return bookDao.getBook(id);
-    }
+    public Book getBook(Integer id){return bookDao.getBook(id);}
     @Override
     public Book getBook(String name){
         return bookDao.getBook(name);

@@ -2,6 +2,7 @@ package com.example.bookstorebackend.daoimpl;
 
 import com.example.bookstorebackend.dao.BookDao;
 import com.example.bookstorebackend.dao.OrderDao;
+import com.example.bookstorebackend.dao.OrderItemDao;
 import com.example.bookstorebackend.entity.Book;
 import com.example.bookstorebackend.entity.Order;
 import com.example.bookstorebackend.entity.OrderItem;
@@ -13,12 +14,13 @@ import com.example.bookstorebackend.repository.UserRepository;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Repository
@@ -29,39 +31,29 @@ public class OrderDaoImpl implements OrderDao {
     private UserRepository userRepository;
 
     @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
     private OrderItemRepository orderItemRepository;
 
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Order addOne(Integer userId, Integer bookId){
         Order order=new Order();
         User user=userRepository.getOne(userId);
         System.out.println("user:"+user);
-        Book book=bookRepository.getOne(bookId);
-        System.out.println("Book:"+book);
-        OrderItem orderItem=new OrderItem();
-        Integer price=book.getPrice();
         /*默认每次添加订单书籍一本*/
         Integer itemNum=1;
-        Integer totalPrice=price*itemNum;
-        /*更新书库书本数量*/
-        book.setNumber(book.getNumber()-itemNum);
+        Book book=bookDao.getBook(bookId);
+        System.out.println("Book:"+book);
+        Integer totalPrice=bookDao.purchaseBook(bookId,itemNum);
         order.setUser(user);
-        bookRepository.save(book);
         Date time=new Date();
         order.setTime(time);
         orderRepository.save(order);
-        orderItem.setBook(book);
-        orderItem.setItemNumber(itemNum);
-        orderItem.setTotal_price(totalPrice);
-        orderItem.setMyOrder(order);
-        orderItemRepository.save(orderItem);
-        orderItem=orderItemRepository.getOne(orderItem.getOrderItemId());
+        OrderItem orderItem=orderItemDao.addOne(book,itemNum,totalPrice,order);
         System.out.println("orderItemid:"+orderItem.getOrderItemId());
         return order;
     }
