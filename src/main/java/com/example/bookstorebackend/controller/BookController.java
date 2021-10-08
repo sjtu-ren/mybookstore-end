@@ -2,6 +2,7 @@ package com.example.bookstorebackend.controller;
 
 import com.example.bookstorebackend.entity.Book;
 import com.example.bookstorebackend.service.BookService;
+import com.example.bookstorebackend.service.HomeVisitService;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,13 +17,17 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookService bookService;
-    private static int counter=0;
+    @Autowired
+    private HomeVisitService homeVisitService;
+//    private static int counter=0;
     @RequestMapping("/getBooks")
     public List<Book> getBooks(@RequestBody JSONObject params){
+        int count;
         synchronized (this){
-            counter++;
-            System.out.format("访问次数：%d",counter);
+            count=homeVisitService.getCount()+1;
+            System.out.format("访问次数：%d",count);
         }
+        homeVisitService.updateCount(count);
         return bookService.getBooks();
     }
 
